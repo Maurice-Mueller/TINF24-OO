@@ -26,6 +26,17 @@ public class Main {
 //    Fahrrad.fahren(fahrrad);
 
     for (Fahrzeug fahrzeug : garage) {
+      switch (fahrzeug.getClass().getSimpleName()) {
+        case "Auto":
+          System.out.println("Auto");
+          break;
+        case "Fahrrad":
+          System.out.println("Fahrrad");
+          break;
+        default:
+          System.out.println("Unbekanntes Fahrzeug");
+          break;
+      }
       fahrzeug.fahren();
     }
 //    garage.forEach(Fahrzeug::fahren);

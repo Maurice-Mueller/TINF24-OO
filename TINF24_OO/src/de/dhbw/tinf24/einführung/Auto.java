@@ -6,9 +6,12 @@ public class Auto extends Fahrzeug {
     super();
   }
 
+  public void starteMotor(){
+    System.out.println("Motor läuft.");
+  }
+
   @Override
   public void fahren() {
     System.out.println("A2: Ich fahre am schnellsten.");
-    super.fahren();
   }
 }
