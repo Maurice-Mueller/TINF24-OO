@@ -2,6 +2,7 @@ package de.dhbw.tinf24.memorymodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
@@ -25,22 +26,21 @@ public class Main {
 
   static Thread erstelleThread(String name, Zähler zähler) {
     return new Thread(() -> {
-      int aufrufe = 0;
+      AtomicInteger anzahlDerInkrementierungen = new AtomicInteger(0);
       List<Integer> historie = new ArrayList<>();
       while (true) {
-        synchronized (lock) {
-          int aktuellerStand = zähler.stand();
-          if (!historie.isEmpty() && historie.getLast() > aktuellerStand) {
-            System.out.println(name + " !! " + historie.getLast() + " > " + aktuellerStand + " !! ");
-          }
-          historie.add(aktuellerStand);
-          if (aktuellerStand >= LIMIT) {
-            System.out.println(name + " Aufrufe: " + aufrufe);
-//            System.out.println(name + " Historie: " + historie);
-            return;
-          }
-          aufrufe++;
-          zähler.setzeAuf(aktuellerStand + 1);
+        int aktuellerStand = zähler.erhöheUmEinsUndGibAktuellenStandZurück(
+            LIMIT,
+            anzahlDerInkrementierungen
+        );
+        if (!historie.isEmpty() && historie.getLast() > aktuellerStand) {
+          System.out.println(name + " !! " + historie.getLast() + " > " + aktuellerStand + " !! ");
+        }
+        historie.add(aktuellerStand);
+        if (aktuellerStand >= LIMIT) {
+          System.out.println(name + " Aufrufe: " + anzahlDerInkrementierungen.get());
+            System.out.println(name + " Historie: " + historie);
+          return;
         }
       }
     }, name);
